@@ -20,16 +20,14 @@ jobs:
 
     - name: Install Gradle and Generate Wrapper
       run: |
-        # Устанавливаем gradle через apt, чтобы гарантированно иметь команду gradle
         sudo apt-get update && sudo apt-get install -y gradle
-        # Генерируем файлы gradlew прямо в корне репозитория
         gradle wrapper --gradle-version 8.5
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    - name: Build Debug APK
-      run: ./gradlew assembleDebug
+    - name: Build Debug APK with Stacktrace
+      run: ./gradlew assembleDebug --stacktrace
 
     - name: Upload APK artifact
       uses: actions/upload-artifact@v4
