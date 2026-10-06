@@ -12,21 +12,12 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Unzip project archive
+    - name: Unzip project archive directly
       run: |
-        ARCHIVE_NAME="creed-unity.zip"
-        unzip -q "$ARCHIVE_NAME" -d extracted_project
-        
-        PROJECT_DIR=$(dirname "$(find extracted_project -name "gradlew" -print -quit)")
-        
-        if [ "$PROJECT_DIR" != "." ] && [ -n "$PROJECT_DIR" ]; then
-          echo "Found project in: $PROJECT_DIR"
-          cp -r "$PROJECT_DIR"/* ./
-        else
-          shopt -s dotglob
-          mv extracted_project/* ./
-        fi
-        rm -rf "$ARCHIVE_NAME" extracted_project
+        # Распаковываем архив прямо в текущую папку (корень репозитория)
+        unzip -o creed-unity.zip
+        # Удаляем сам архив, чтобы он не мешал
+        rm creed-unity.zip
 
     - name: Set up JDK 17
       uses: actions/setup-java@v4
