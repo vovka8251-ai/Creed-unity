@@ -15,13 +15,15 @@ jobs:
     - name: Unzip project archive
       run: |
         ARCHIVE_NAME="creed-unity.zip"
-        
         unzip -q "$ARCHIVE_NAME" -d extracted_project
-        shopt -s dotglob
-        # Если архив распаковался внутрь папки с именем проекта, перемещаем её содержимое наружу
-        if [ -d "extracted_project/creed-unity" ]; then
-          mv extracted_project/creed-unity/* ./
+        
+        PROJECT_DIR=$(dirname "$(find extracted_project -name "gradlew" -print -quit)")
+        
+        if [ "$PROJECT_DIR" != "." ] && [ -n "$PROJECT_DIR" ]; then
+          echo "Found project in: $PROJECT_DIR"
+          cp -r "$PROJECT_DIR"/* ./
         else
+          shopt -s dotglob
           mv extracted_project/* ./
         fi
         rm -rf "$ARCHIVE_NAME" extracted_project
