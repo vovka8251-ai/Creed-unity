@@ -18,11 +18,15 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@v3
-      with:
-        # Автоматически создаем обертку wrapper при инициализации Gradle
-        generate-gradle-wrapper: true
+    - name: Install Gradle and Generate Wrapper
+      run: |
+        # Устанавливаем gradle через apt, чтобы гарантированно иметь команду gradle
+        sudo apt-get update && sudo apt-get install -y gradle
+        # Генерируем файлы gradlew прямо в корне репозитория
+        gradle wrapper --gradle-version 8.5
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
 
     - name: Build Debug APK
       run: ./gradlew assembleDebug
