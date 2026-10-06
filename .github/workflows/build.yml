@@ -1,4 +1,4 @@
-name: Unzip and Build APK
+name: Build APK Manually
 
 on:
   push:
@@ -12,21 +12,14 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Unzip project archive directly
-      run: |
-        # Распаковываем архив прямо в текущую папку (корень репозитория)
-        unzip -o creed-unity.zip
-        # Удаляем сам архив, чтобы он не мешал
-        rm creed-unity.zip
-
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v3
 
     - name: Build Debug APK
       run: ./gradlew assembleDebug
